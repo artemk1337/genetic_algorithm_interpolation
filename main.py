@@ -45,7 +45,7 @@ tol = 0.001
 counter = 0
 while True:
     counter += 1
-    samples = [KHandler([k_ + random.uniform(-1, 1) for k_ in best_k], x, y) for k in range(10)]
+    samples = [KHandler([k_ + random.uniform(-1, 1) for k_ in best_k], x, y) for k in range(1000)]
     for sample in samples:
         sample.calculate()
         #print(sample.error)
