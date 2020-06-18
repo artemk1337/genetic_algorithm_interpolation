@@ -13,7 +13,7 @@ Point function interpolation using genetic algorithm
 > x - x coord  
 > y - y coord  
 > power_polynom - power of expected polynom  
-> step - start step of algorithm  >
+> step - start step of algorithm  
 > tol - max error before stop  
 > childs - number of childrens  
 
