@@ -4,11 +4,6 @@ import matplotlib.pyplot as plt
 import random
 
 
-# k: [1, 2, 3, 4...] => 1 + 2x + 3x^2 + 4x^3 + ...
-
-# k = [0, 1]
-
-
 def func(k, x, y=None):
     error = []
     for x_ in x:
@@ -17,13 +12,6 @@ def func(k, x, y=None):
     if y:
         error = np.abs(error - np.array(y)).mean()
     return error
-
-
-#print(func(k, x, y))
-
-#x_new = np.linspace(min(x), max(x), num=500)
-#plt.plot(x_new, func(k, x_new))
-#plt.show()
 
 
 class KHandler:
@@ -37,27 +25,55 @@ class KHandler:
         self.error = func(self.k, self.x, self.y)
 
 
-x = [1, 2, 3]
-y = [8, 6, 4]
-best_k = [0, 0]
-best_err = np.inf
-tol = 0.001
-counter = 0
-while True:
-    counter += 1
-    samples = [KHandler([k_ + random.uniform(-1, 1) for k_ in best_k], x, y) for k in range(1000)]
-    for sample in samples:
-        sample.calculate()
-        #print(sample.error)
-        if sample.error < best_err:
-            best_err = sample.error
-            best_k = sample.k
-    print(counter, best_err)
-    if best_err < tol:
-        print(best_err)
-        print(best_k)
-        break
+class GenAlg:
+    def __init__(self, x, y, power_polynom, step=1, tol=0.001):
+        self.step = step
+        self.x = x
+        self.y = y
+        self.tol = tol
+        self.power_polynom = power_polynom
+        self.best_k = [0 for i in range(self.power_polynom)]
+        self.alpha = None
+        self.best_err = None
+        self.first_err = None
+        self.counter = 0
 
-x_new = np.linspace(min(x), max(x), num=500)
-plt.plot(x_new, func(best_k, x_new))
-plt.show()
+    def calculate(self):
+        def get_first_error():
+            tmp = KHandler(self.best_k, self.x, self.y)
+            tmp.calculate()
+            self.best_err, self.first_err = tmp.error, tmp.error
+
+        get_first_error()
+        while True:
+            self.counter += 1
+            self.alpha = self.best_err / self.first_err
+            samples = [KHandler([k_ + random.uniform(-self.step, self.step) * self.alpha
+                                 for k_ in self.best_k], self.x, self.y) for k in range(10)]
+            for sample in samples:
+                sample.calculate()
+                # print(sample.error)
+                if sample.error < self.best_err:
+                    self.best_err = sample.error
+                    self.best_k = sample.k
+            print('step -', self.counter, 'error -', self.best_err)
+            if self.best_err < self.tol:
+                print(self.best_err)
+                print(self.best_k)
+                break
+
+    def plot(self):
+        x_new = np.linspace(min(self.x), max(self.x), num=500)
+        plt.plot(x_new, func(self.best_k, x_new))
+        plt.show()
+
+
+x = [0, -1, 1]
+y = [1, 2, 2]
+power_polynom = 3
+
+
+cl = GenAlg(x, y, power_polynom)
+cl.calculate()
+cl.plot()
+
