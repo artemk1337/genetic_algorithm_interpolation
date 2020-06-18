@@ -26,12 +26,13 @@ class KHandler:
 
 
 class GenAlg:
-    def __init__(self, x, y, power_polynom, step=1, tol=0.001):
+    def __init__(self, x, y, power_polynom, step=1, tol=0.001, childs=10):
         self.step = step
         self.x = x
         self.y = y
         self.tol = tol
         self.power_polynom = power_polynom
+        self.childs = childs
         self.best_k = [0 for i in range(self.power_polynom)]
         self.alpha = None
         self.best_err = None
@@ -49,7 +50,7 @@ class GenAlg:
             self.counter += 1
             self.alpha = self.best_err / self.first_err
             samples = [KHandler([k_ + random.uniform(-self.step, self.step) * self.alpha
-                                 for k_ in self.best_k], self.x, self.y) for k in range(10)]
+                                 for k_ in self.best_k], self.x, self.y) for k in range(self.childs)]
             for sample in samples:
                 sample.calculate()
                 # print(sample.error)
@@ -58,8 +59,10 @@ class GenAlg:
                     self.best_k = sample.k
             print('step -', self.counter, 'error -', self.best_err)
             if self.best_err < self.tol:
-                print(self.best_err)
-                print(self.best_k)
+                print('best error -', self.best_err)
+                s = ''
+                print('function:', s.join(f'+ {k_}*x**{power_} '
+                                          for k_, power_ in zip(self.best_k, range(len(self.best_k)))))
                 break
 
     def plot(self):
@@ -68,12 +71,9 @@ class GenAlg:
         plt.show()
 
 
-x = [0, -1, 1]
-y = [1, 2, 2]
-power_polynom = 3
-
-
-cl = GenAlg(x, y, power_polynom)
-cl.calculate()
-cl.plot()
-
+#x = [0, -1, 1]
+#y = [1, 2, 2]
+#power_polynom = 3
+#cl = GenAlg(x, y, power_polynom)
+#cl.calculate()
+#cl.plot()
