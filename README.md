@@ -31,8 +31,8 @@ Point function interpolation using genetic algorithm
 ## Example
 ```
 >>> from main import GenAlg  
->>> x = [0, -1, 1]  # x coord  
->>> y = [1, 2, 2]  # y coord  
+>>> x = [0, -1, 1]  # x points  
+>>> y = [1, 2, 2]  # y value  
 >>> power_polynom = 3  # power of polynom  
 >>> cl = GenAlg(x, y, power_polynom)  
 >>> cl.calculate()  
