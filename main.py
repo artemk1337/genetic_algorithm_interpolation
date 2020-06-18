@@ -1,7 +1,7 @@
 import numpy as np
-import scipy
 import matplotlib.pyplot as plt
 import random
+from sklearn.metrics import mean_absolute_error
 
 
 def func(k, x, y=None):
@@ -10,7 +10,8 @@ def func(k, x, y=None):
         error += [sum([k_*x_**power_ for k_, power_ in zip(k, range(len(k)))])]
     error = np.array(error)
     if y:
-        error = np.abs(error - np.array(y)).mean()
+        # error = np.abs(error - np.array(y)).mean()
+        error = mean_absolute_error(error, np.array(y))
     return error
 
 
